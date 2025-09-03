@@ -1,0 +1,101 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+ ////apna clgg method gving tle
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if(root==null){
+            return root;
+        }
+        if(root.val>key){
+            root.left=deleteNode(root.left,key);
+        }
+        else if(root.val<key){
+            root.right=deleteNode(root.right,key);
+        }
+        else{
+            //case 1 no child
+            if(root.left==null && root.right==null){
+                return null;
+            }
+            //case2
+            else if(root.left==null){
+                return root.right;
+            }
+            else if(root.right==null){
+                return root.left;
+            }
+            //case3
+           else{
+                TreeNode IS=findIS(root.right);
+                root.val=IS.val;
+                root.right=deleteNode(root.right,IS.val);
+           }
+            
+        }
+        return root;
+    }
+        public static TreeNode findIS(TreeNode root){
+            while(root.left!=null){
+                root=root.left;
+            }
+            return root;
+        }
+    
+}
+
+////striver method
+/// 
+/// 
+///  
+ class Solution{
+     private static Node findLast(Node root){
+        while(root.right!=null)root=root.right;
+        return root;
+    }
+    private static Node helper(Node root){
+        if(root.left==null)return root.right;
+        else if(root.right==null)return root.left;
+        Node rightChild=root.right;
+        Node lastNode=findLast(root.left);
+        lastNode.right=rightChild;
+        return root.left;
+    }
+    public static Node deleteNode(Node root, int key) {
+        if(root==null)return root;
+        if(root.data==key)return helper(root);
+        Node original=root;
+        while(root!=null){
+            if(root.data>key){
+                if(root.left!=null && root.left.data==key){
+                    root.left=helper(root.left);
+                    break;
+                }
+                else root=root.left;
+            }
+            else{
+                if(root.right!=null && root.right.data==key){
+                    root.right=helper(root.right);
+                    break;
+                }
+                else root=root.right;
+            }
+        }
+        return original;
+    }
+}
+
+not giving tle

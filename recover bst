@@ -1,0 +1,113 @@
+class Solution {
+    public void inOrder(TreeNode root, ArrayList<Integer> ls) {
+        if (root == null) {
+            return;
+        }
+        inOrder(root.left, ls);
+        ls.add(root.val);
+        inOrder(root.right, ls);
+    }
+
+    public void inOrder2(TreeNode root, int val1, int val2) {
+        if (root == null) {
+            return;
+        }
+        inOrder2(root.left, val1, val2);
+        if (root.val == val1) {
+            root.val = val2;
+        } else if (root.val == val2) {
+            root.val = val1;
+        }
+        inOrder2(root.right, val1, val2);
+    }
+
+    public void recoverTree(TreeNode root) {
+        // Step 1: Get the in-order list (your approach is correct)
+        ArrayList<Integer> ls = new ArrayList<>();
+        inOrder(root, ls);
+
+        // --- CORRECTED LOGIC TO FIND val1 and val2 ---
+        Integer first = null;
+        Integer second = null;
+
+        // Find the two values that break the sorted order
+        for (int i = 0; i < ls.size() - 1; i++) {
+            if (ls.get(i) > ls.get(i + 1)) {
+                // The second number of a dip is always a candidate.
+                // For a non-adjacent swap, this will be updated by the last dip.
+                second = ls.get(i + 1);
+
+                // The first number is only assigned ONCE, at the first dip.
+                if (first == null) {
+                    first = ls.get(i);
+                }
+            }
+        }
+
+        // Step 3: Traverse again and swap the values (your approach is correct)
+        inOrder2(root, first, second);
+    }
+}
+
+
+//////////////////////
+/// 
+/// 
+/// 
+
+/*
+class Node {
+    int data;
+    Node left;
+    Node right;
+
+    Node(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+*/
+
+class Solution {
+    void inorder(Node root,ArrayList<Node> arr){
+        if(root==null){
+            return ;
+        }
+        inorder(root.left,arr);
+        arr.add(root);
+        inorder(root.right,arr);
+    }
+    
+    void correctBST(Node root) {
+        // code here.
+        ArrayList<Node> arr=new ArrayList<>();
+        inorder(root,arr);
+        Node a=null;
+        Node b=null;
+        int j=0;
+        
+        for(int i=0;i<arr.size()-1;i++){
+            if(arr.get(i).data>arr.get(i+1).data){
+                if(a==null){
+                    a=arr.get(i);
+                    j=i;
+                    break;
+                }
+            }
+        }
+        
+        b=arr.get(j+1);
+        for(int i=j+2;i<arr.size();i++){
+            if(b.data>arr.get(i).data){
+                b=arr.get(i);
+            }
+        }
+        
+        int temp=a.data;
+        a.data=b.data;
+        b.data=temp;
+        
+       
+    }
+}
